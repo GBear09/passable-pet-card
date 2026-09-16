@@ -1,12 +1,12 @@
 /**
  * Passable Pet Card
- * Version: 1.0.0
+ * Version: 1.0.1
  * GitHub: https://github.com/GBear09/passable-pet-card
  * Description: A sleek, comprehensive Home Assistant dashboard card for Fi smart dog collars (TryFi)
  * with real-time activity tracking, collar LED controls, lost mode emergency trigger, and native visual UI editor.
  */
 
-const CARD_VERSION = "1.0.0";
+const CARD_VERSION = "1.0.1";
 
 console.info(
   `%c PASSABLE PET CARD %c v${CARD_VERSION} `,
@@ -125,10 +125,20 @@ class PassablePetCard extends LitElement {
     return document.createElement("passable-pet-card-editor");
   }
 
-  static getStubConfig() {
+  static getStubConfig(hass) {
+    let defaultEntity = "";
+    if (hass && hass.states) {
+      for (const eid of Object.keys(hass.states)) {
+        if (eid.startsWith("device_tracker.") && (eid.includes("hudson") || eid.includes("collar") || eid.endsWith("_tracker"))) {
+          defaultEntity = eid;
+          break;
+        }
+      }
+    }
     return {
       title: "Hudson",
       subtitle: "Golden Retriever",
+      entity: defaultEntity || "device_tracker.hudson_tracker",
       step_goal: 15000,
       distance_unit: "auto",
     };
@@ -151,27 +161,30 @@ class PassablePetCard extends LitElement {
       if (baseName) prefixes.add(baseName.toLowerCase());
     }
 
-    // Auto-scan states for TryFi pet trackers if no prefix set
-    if (prefixes.size === 0) {
-      for (const entityId of allStates) {
-        if (entityId.startsWith("device_tracker.") && entityId.includes("tracker")) {
-          const stateObj = this.hass.states[entityId];
-          if (stateObj?.attributes?.entity_picture?.includes("tryfi.com") || stateObj?.attributes?.tracking_type === "position") {
-            const petName = entityId.split(".")[1].replace(/_tracker$/, "");
-            prefixes.add(petName.toLowerCase());
-            break;
-          }
-        }
+    // Infer from Title (e.g. "Hudson" -> "hudson")
+    if (cfg.title && typeof cfg.title === "string") {
+      const cleanTitle = cfg.title.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
+      if (cleanTitle && cleanTitle !== "my dog" && cleanTitle !== "my pet" && cleanTitle !== "pet") {
+        prefixes.add(cleanTitle);
       }
     }
 
-    // Fallback search for any collar battery or daily steps entity
-    if (prefixes.size === 0) {
-      for (const entityId of allStates) {
-        if (entityId.includes("_collar_battery_level")) {
-          const petName = entityId.split(".")[1].replace(/_collar_battery_level$/, "");
-          prefixes.add(petName.toLowerCase());
-          break;
+    // Auto-scan states for unique TryFi collar entities (collar_battery_level, collar_light, lost_mode, tracker)
+    for (const entityId of allStates) {
+      if (entityId.startsWith("sensor.") && entityId.includes("_collar_battery_level")) {
+        const p = entityId.replace("sensor.", "").replace(/_collar_battery_level$/, "");
+        if (p) prefixes.add(p.toLowerCase());
+      } else if (entityId.startsWith("light.") && entityId.includes("_collar_light")) {
+        const p = entityId.replace("light.", "").replace(/_collar_light$/, "");
+        if (p) prefixes.add(p.toLowerCase());
+      } else if (entityId.startsWith("select.") && entityId.includes("_lost_mode")) {
+        const p = entityId.replace("select.", "").replace(/_lost_mode$/, "");
+        if (p) prefixes.add(p.toLowerCase());
+      } else if (entityId.startsWith("device_tracker.") && entityId.endsWith("_tracker")) {
+        const stateObj = this.hass.states[entityId];
+        if (stateObj?.attributes?.entity_picture?.includes("tryfi.com") || stateObj?.attributes?.tracking_type === "position") {
+          const p = entityId.replace("device_tracker.", "").replace(/_tracker$/, "");
+          if (p && !p.startsWith("nmap_")) prefixes.add(p.toLowerCase());
         }
       }
     }

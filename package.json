@@ -1,6 +1,6 @@
 {
   "name": "passable-pet-card",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Passable Pet Card - A sleek, comprehensive Home Assistant dashboard card for Fi smart dog collars (TryFi) with activity tracking, collar LED controls, lost mode emergency trigger, and visual UI editor.",
   "main": "passable-pet-card.js",
   "repository": {

@@ -1,7 +1,7 @@
 # Passable Pet Card
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/default)
-[![version](https://img.shields.io/badge/version-v1.0.0-blue.svg)](https://github.com/GBear09/passable-pet-card/releases)
+[![version](https://img.shields.io/badge/version-v1.0.1-blue.svg)](https://github.com/GBear09/passable-pet-card/releases)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 A sleek, modern, and comprehensive Home Assistant Lovelace card designed specifically for the **Fi Smart Dog Collar (TryFi)** integration. Built with glassmorphism aesthetics, animated expanding pill navigation, **Native Home Assistant `ha-entity-picker` Visual UI Editor support**, and **zero-config smart entity auto-discovery**.
