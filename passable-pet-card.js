@@ -1,15 +1,15 @@
 /**
  * Passable Pet Card
- * Version: 1.0.1
+ * Version: 1.0.2
  * GitHub: https://github.com/GBear09/passable-pet-card
  * Description: A sleek, comprehensive Home Assistant dashboard card for Fi smart dog collars (TryFi)
  * with real-time activity tracking, collar LED controls, lost mode emergency trigger, and native visual UI editor.
  */
 
-const CARD_VERSION = "1.0.1";
+const CARD_VERSION = "1.0.2";
 
 console.info(
-  `%c PASSABLE PET CARD %c v${CARD_VERSION} `,
+  `%c PASSABLE-PET-CARD %c v${CARD_VERSION} `,
   "color: white; background: #ff9800; font-weight: bold; padding: 2px 6px; border-radius: 4px 0 0 4px;",
   "color: #ff9800; background: #fff3e0; font-weight: bold; padding: 2px 6px; border-radius: 0 4px 4px 0;"
 );
@@ -21,6 +21,7 @@ window.customCards.push({
   name: "Passable Pet Card",
   description: "A sleek, comprehensive dashboard card for Fi smart dog collars (TryFi) with activity tracking, collar LED controls, lost mode emergency trigger, and visual UI editor.",
   preview: true,
+  documentationURL: "https://github.com/GBear09/passable-pet-card",
 });
 
 const LitElement =
@@ -1041,10 +1042,10 @@ class PassablePetCard extends LitElement {
 
       ha-card {
         background: var(--ha-card-background, #fff);
-        box-shadow: var(--ha-card-box-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+        box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
         overflow: hidden;
         color: var(--primary-text-color);
-        border-radius: var(--ha-card-border-radius, 16px);
+        border-radius: var(--ha-card-border-radius, 12px);
         display: flex;
         flex-direction: column;
         position: relative;
@@ -1091,8 +1092,8 @@ class PassablePetCard extends LitElement {
         justify-content: space-between;
         align-items: flex-start;
         border-bottom: 1px solid var(--divider-color, #e0e0e0);
-        padding-bottom: 14px;
-        margin-bottom: 12px;
+        padding-bottom: 16px;
+        margin-bottom: 16px;
         flex-shrink: 0;
       }
       .header-left {
